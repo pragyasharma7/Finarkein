@@ -1,10 +1,25 @@
 // App.js
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Transition } from "@headlessui/react";
 import './App.css'
-function GridCell({ content }) {
+
+const TransitionEffects = {
+  None: "",
+  Fade: "transition-opacity",
+  Slide: "transition-transform",
+};
+function GridCell({ content, transitionEffect}) {
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    setIsVisible(true);
+    return () => setIsVisible(false);
+  }, [content]);
+  
+    const transitionClassName = TransitionEffects[transitionEffect];
+
   return (
-    <div className="grid__cell">
+    <div className={`grid__cell ${transitionClassName}`}>
       {content}
     </div>
   );
@@ -13,6 +28,7 @@ function GridCell({ content }) {
 function App() {
   const [inputValue, setInputValue] = useState("");
   const [gridContent, setGridContent] = useState(Array(81).fill(""));
+  const [selectedTransitionEffect, setSelectedTransitionEffect] = useState("None");
 
   const handleChange = (e) => {
     const value = e.target.value;
@@ -22,6 +38,10 @@ function App() {
       newGridContent.push(i < value.length ? value[i] : null);
     }
     setGridContent(newGridContent);
+  };
+
+   const handleTransitionEffectChange = (e) => {
+    setSelectedTransitionEffect(e.target.value);
   };
 
   return (
@@ -37,17 +57,28 @@ function App() {
         {gridContent.map((content, index) => (
           <Transition
             show={true}
-            enter="transition-opacity duration-300"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="transition-opacity duration-300"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
+          
             key={index}
           >
-            <GridCell content={content} />
+            <GridCell content={content} transitionEffect={selectedTransitionEffect}/>
           </Transition>
         ))}
+      </div>
+
+        <div>
+        <label htmlFor="transitionEffect">Choose Transition Effect:</label>
+        <select
+          id="transitionEffect"
+          className="dropdown"
+          value={selectedTransitionEffect}
+          onChange={handleTransitionEffectChange}
+        >
+          {Object.keys(TransitionEffects).map((effect) => (
+            <option key={effect} value={effect}>
+              {effect}
+            </option>
+          ))}
+        </select>
       </div>
     </div>
   );

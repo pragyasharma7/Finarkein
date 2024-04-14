@@ -57,3 +57,20 @@
   grid-template-columns: repeat(9, 1fr);
   grid-gap: 2px;
 }
+input{
+  margin-top:40px;
+  margin-bottom: 40px;
+  width: 380px;
+  padding:10px 10px;
+}
+.transition-opacity {
+  transition: opacity 0.5s ease-in-out;
+}
+
+.transition-transform {
+  transition: transform 0.5s ease-in-out;
+}
+.dropdown{
+  margin-top:40px;
+  padding:10px;
+}
